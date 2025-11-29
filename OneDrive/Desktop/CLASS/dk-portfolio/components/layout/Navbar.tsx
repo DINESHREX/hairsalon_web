@@ -39,7 +39,7 @@ export function Navbar() {
         >
             <div className="container mx-auto px-6 flex items-center justify-between max-w-[1400px]">
                 <Link href="/" className="relative group flex items-center justify-center">
-                    <div className="relative w-14 h-14 transition-transform duration-300 scale-[2.5] group-hover:scale-[2.7]">
+                    <div className="relative w-14 h-14 transition-transform duration-300 scale-[1.8] md:scale-[2.0] group-hover:scale-[2.0] md:group-hover:scale-[2.2]">
                         <Image
                             src="/DK-removebg-preview.png"
                             alt="DK Logo"

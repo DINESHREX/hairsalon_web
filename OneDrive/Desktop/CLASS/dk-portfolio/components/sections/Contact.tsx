@@ -78,7 +78,7 @@ export function Contact() {
                             <div>
                                 <h3 className="font-bold text-text mb-1">Email</h3>
                                 <a href="mailto:dineshkumars.work@gmail.com" className="text-subtext hover:text-accent transition-colors">
-                                    dineshkumars.work@gmail.com
+                                    dineshselvakumar0312@gmail.com
                                 </a>
                             </div>
                         </Card>
@@ -90,7 +90,7 @@ export function Contact() {
                             <div>
                                 <h3 className="font-bold text-text mb-1">Phone</h3>
                                 <a href="tel:+919876543210" className="text-subtext hover:text-accent transition-colors">
-                                    +91 98765 43210
+                                    +91 8072356094
                                 </a>
                             </div>
                         </Card>

@@ -33,7 +33,7 @@ export function Hero() {
 
     return (
         <Section
-            className="min-h-screen flex items-center justify-center overflow-hidden pt-64 pb-20 relative"
+            className="min-h-screen flex items-center justify-center overflow-hidden pt-32 md:pt-64 pb-20 relative"
             initial={{ opacity: 1, y: 0 }}
             whileInView={{ opacity: 1, y: 0 }}
         >
