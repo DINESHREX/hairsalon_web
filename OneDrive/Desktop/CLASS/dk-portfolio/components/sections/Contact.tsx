@@ -56,7 +56,7 @@ export function Contact() {
 
     return (
         <Section id="contact" className="bg-muted/5">
-            <div className="container mx-auto px-4 md:px-6 max-w-[1200px]">
+            <div className="container mx-auto px-2 md:px-6 max-w-[1200px]">
                 <Reveal width="100%">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-text">
