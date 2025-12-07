@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
+import { Reveal } from "@/components/ui/Reveal";
 
 const skills = [
     { name: "Python / Backend", level: 90 },
@@ -16,11 +17,7 @@ export function About() {
     return (
         <Section id="about">
             <div className="container mx-auto px-6 max-w-[1200px]">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                >
+                <Reveal width="100%">
                     {/* About Me Section */}
                     <div className="mb-16">
                         <h2 className="text-3xl font-bold mb-6 text-text">
@@ -40,14 +37,19 @@ export function About() {
                         </div>
 
                         <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl">
-                            <div className="p-4 rounded-xl bg-card border border-glass-border text-center">
-                                <h3 className="text-3xl font-bold text-accent">3+</h3>
-                                <p className="text-sm text-subtext mt-1">Years Coding</p>
-                            </div>
-                            <div className="p-4 rounded-xl bg-card border border-glass-border text-center">
-                                <h3 className="text-3xl font-bold text-accent-2">10+</h3>
-                                <p className="text-sm text-subtext mt-1">Projects Built</p>
-                            </div>
+                            {[
+                                { label: "Years Coding", value: "3+" },
+                                { label: "Projects Built", value: "10+" },
+                                { label: "Coffee/Day", value: "∞" },
+                                { label: "Bugs Squashed", value: "99+" },
+                            ].map((stat, i) => (
+                                <Reveal key={stat.label} delay={0.1 * i} className="h-full">
+                                    <div className="p-4 rounded-xl bg-card border border-glass-border text-center h-full flex flex-col justify-center hover:border-accent/50 transition-colors">
+                                        <h3 className="text-3xl font-bold text-accent">{stat.value}</h3>
+                                        <p className="text-sm text-subtext mt-1">{stat.label}</p>
+                                    </div>
+                                </Reveal>
+                            ))}
                         </div>
                     </div>
 
@@ -60,15 +62,11 @@ export function About() {
                                 const strokeDashoffset = circumference - (skill.level / 100) * circumference;
 
                                 return (
-                                    <motion.div
+                                    <div
                                         key={skill.name}
-                                        initial={{ opacity: 0, scale: 0.8 }}
-                                        whileInView={{ opacity: 1, scale: 1 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.5, delay: index * 0.1 }}
                                         className="flex flex-col items-center"
                                     >
-                                        <div className="relative w-32 h-32 mb-4">
+                                        <div className="relative w-32 h-32 mb-4 group">
                                             <svg className="transform -rotate-90 w-32 h-32">
                                                 <circle
                                                     cx="64"
@@ -99,8 +97,8 @@ export function About() {
                                                 />
                                                 <defs>
                                                     <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                        <stop offset="0%" stopColor="rgb(6, 182, 212)" />
-                                                        <stop offset="100%" stopColor="rgb(59, 130, 246)" />
+                                                        <stop offset="0%" stopColor="var(--accent)" />
+                                                        <stop offset="100%" stopColor="var(--accent-2)" />
                                                     </linearGradient>
                                                 </defs>
                                             </svg>
@@ -111,22 +109,22 @@ export function About() {
                                                     whileInView={{ opacity: 1 }}
                                                     viewport={{ once: true }}
                                                     transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-                                                    className="text-2xl font-bold text-accent"
+                                                    className="text-2xl font-bold text-accent group-hover:scale-110 transition-transform"
                                                 >
                                                     {skill.level}%
                                                 </motion.span>
                                             </div>
                                         </div>
 
-                                        <span className="text-sm font-medium text-text text-center">
+                                        <span className="text-sm font-medium text-text text-center group-hover:text-accent transition-colors">
                                             {skill.name}
                                         </span>
-                                    </motion.div>
+                                    </div>
                                 );
                             })}
                         </div>
                     </Card>
-                </motion.div>
+                </Reveal>
             </div>
         </Section>
     );

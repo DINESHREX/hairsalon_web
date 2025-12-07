@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import PageWrapper from "@/components/layout/PageWrapper";
+import SmoothScroll from "@/components/ui/SmoothScroll";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -58,6 +59,7 @@ export default function RootLayout({
           "antialiased bg-background text-foreground min-h-screen selection:bg-accent selection:text-accent-foreground flex flex-col"
         )}
       >
+        <SmoothScroll />
         <Navbar />
         <main className="flex-grow">
           <PageWrapper>{children}</PageWrapper>
