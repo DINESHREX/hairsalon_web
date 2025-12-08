@@ -55,14 +55,14 @@ export const Navigation = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="fixed top-0 left-0 right-0 z-50 py-6 px-6 md:px-12"
+        className="fixed top-0 left-0 right-0 z-50 py-4 px-4 md:py-6 md:px-12"
         style={{
           backgroundColor: `hsla(0, 0%, 5%, ${isScrolled ? 0.95 : 0})`,
           borderBottom: `1px solid hsla(0, 0%, 100%, ${isScrolled ? 0.1 : 0})`,
           backdropFilter: isScrolled ? 'blur(20px)' : 'none',
         }}
       >
-        <div className="container mx-auto flex items-center justify-between">
+        <div className="w-full flex items-center justify-between">
           {/* Logo */}
           <MagneticButton className="bg-transparent border-none">
             <motion.a

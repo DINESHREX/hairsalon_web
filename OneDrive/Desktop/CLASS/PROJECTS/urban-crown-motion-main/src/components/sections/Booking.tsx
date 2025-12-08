@@ -9,9 +9,36 @@ const timeSlots = ["10:00 AM", "11:00 AM", "12:00 PM", "2:00 PM", "3:00 PM", "4:
 
 export const Booking = () => {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string>("");
   const [formData, setFormData] = useState({ name: "", phone: "" });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+
+  // Generate next 7 days for booking
+  const getNextSevenDays = () => {
+    const days = [];
+    const today = new Date();
+    
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      
+      const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+      const monthName = date.toLocaleDateString('en-US', { month: 'short' });
+      const dayNum = date.getDate();
+      const year = date.getFullYear();
+      
+      days.push({
+        value: date.toISOString().split('T')[0], // YYYY-MM-DD format
+        label: `${dayName}, ${monthName} ${dayNum}, ${year}`,
+        display: `${dayNum}/${date.getMonth() + 1}/${year}` // For confirmation display
+      });
+    }
+    
+    return days;
+  };
+
+  const availableDates = getNextSevenDays();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,6 +163,41 @@ export const Booking = () => {
                     </motion.div>
                   </motion.div>
 
+                  {/* Date Selection */}
+                  <div>
+                    <label className="text-muted-foreground text-sm uppercase letter-spacing-wide mb-4 flex items-center gap-2">
+                      <Clock className="w-4 h-4" />
+                      Select Date
+                    </label>
+                    <motion.div
+                      className="relative"
+                      whileHover={{ scale: 1.01 }}
+                    >
+                      <select
+                        value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.target.value)}
+                        className="w-full bg-background border border-border focus:border-primary px-6 py-4 font-body text-foreground outline-none transition-all duration-300 appearance-none cursor-pointer"
+                        required
+                      >
+                        <option value="">Choose a date</option>
+                        {availableDates.map(date => (
+                          <option key={date.value} value={date.value}>
+                            {date.label}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                        ▼
+                      </div>
+                      <motion.div
+                        className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-primary to-gold-light origin-left"
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: selectedDate ? 1 : 0 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    </motion.div>
+                  </div>
+
                   {/* Time Slots */}
                   <div>
                     <label className="text-muted-foreground text-sm uppercase letter-spacing-wide mb-4 flex items-center gap-2">
@@ -192,7 +254,7 @@ export const Booking = () => {
                   >
                     <motion.button
                       type="submit"
-                      disabled={!selectedTime || !formData.name || !formData.phone}
+                      disabled={!selectedTime || !formData.name || !formData.phone || !selectedDate}
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.99 }}
                       className="w-full bg-primary text-primary-foreground py-5 font-body uppercase letter-spacing-wide text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:shadow-[0_0_40px_rgba(201,162,77,0.4)] relative overflow-hidden group"
@@ -211,98 +273,260 @@ export const Booking = () => {
               ) : (
                 <motion.div
                   key="success"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.6 }}
-                  className="text-center py-16"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="relative py-16"
                 >
-                  {/* Success animation */}
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                    className="relative w-24 h-24 mx-auto mb-8"
-                  >
+                  {/* Confetti particles */}
+                  {[...Array(30)].map((_, i) => (
                     <motion.div
-                      className="absolute inset-0 bg-primary rounded-full"
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
+                      key={i}
+                      className="absolute w-2 h-2 rounded-full"
+                      style={{
+                        background: i % 3 === 0 ? 'hsl(var(--primary))' : i % 3 === 1 ? 'hsl(var(--primary) / 0.6)' : 'hsl(var(--foreground) / 0.3)',
+                        left: `${Math.random() * 100}%`,
+                        top: '0%',
+                      }}
+                      initial={{ y: -20, opacity: 0, rotate: 0 }}
+                      animate={{
+                        y: [0, Math.random() * 400 + 200],
+                        x: [(Math.random() - 0.5) * 100, (Math.random() - 0.5) * 200],
+                        opacity: [0, 1, 1, 0],
+                        rotate: Math.random() * 720,
+                        scale: [0, 1, 1, 0.5],
+                      }}
+                      transition={{
+                        delay: i * 0.02,
+                        duration: 2 + Math.random() * 2,
+                        ease: "easeOut",
+                      }}
                     />
-                    <motion.div
-                      className="absolute inset-0 bg-primary rounded-full flex items-center justify-center"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.3, type: "spring" }}
-                    >
-                      <motion.div
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ delay: 0.5, duration: 0.5 }}
-                      >
-                        <Check className="w-12 h-12 text-primary-foreground" />
-                      </motion.div>
-                    </motion.div>
+                  ))}
 
-                    {/* Sparkle effects */}
-                    {[...Array(6)].map((_, i) => (
+                  {/* Success Icon with Ripple Effect */}
+                  <div className="relative w-32 h-32 mx-auto mb-8">
+                    {/* Ripple rings */}
+                    {[...Array(3)].map((_, i) => (
                       <motion.div
                         key={i}
-                        className="absolute w-2 h-2 bg-primary rounded-full"
-                        style={{
-                          top: "50%",
-                          left: "50%",
-                        }}
-                        initial={{ scale: 0, x: 0, y: 0 }}
-                        animate={{
-                          scale: [0, 1, 0],
-                          x: Math.cos((i * 60 * Math.PI) / 180) * 60,
-                          y: Math.sin((i * 60 * Math.PI) / 180) * 60,
+                        className="absolute inset-0 border-2 border-primary rounded-full"
+                        initial={{ scale: 1, opacity: 0.6 }}
+                        animate={{ 
+                          scale: [1, 2, 2.5],
+                          opacity: [0.6, 0.3, 0]
                         }}
                         transition={{
-                          delay: 0.5 + i * 0.1,
-                          duration: 0.6,
+                          delay: i * 0.3,
+                          duration: 1.5,
+                          repeat: Infinity,
+                          repeatDelay: 0.6,
                         }}
                       />
                     ))}
-                  </motion.div>
+                    
+                    {/* Main success circle */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center shadow-2xl"
+                      initial={{ scale: 0, rotate: -180 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ 
+                        delay: 0.2, 
+                        type: "spring", 
+                        stiffness: 200,
+                        damping: 15
+                      }}
+                    >
+                      {/* Checkmark */}
+                      <motion.svg
+                        width="64"
+                        height="64"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="text-primary-foreground"
+                      >
+                        <motion.path
+                          d="M20 6L9 17l-5-5"
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{ delay: 0.5, duration: 0.6, ease: "easeInOut" }}
+                        />
+                      </motion.svg>
+                    </motion.div>
 
-                  <motion.h3 
-                    className="font-heading text-3xl text-foreground mb-4"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
-                  >
-                    Booking Confirmed
-                  </motion.h3>
-                  
-                  <motion.p 
-                    className="text-muted-foreground font-body"
+                    {/* Sparkles around the circle */}
+                    {[...Array(8)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute w-3 h-3"
+                        style={{
+                          top: '50%',
+                          left: '50%',
+                        }}
+                        initial={{ scale: 0, x: 0, y: 0, opacity: 0 }}
+                        animate={{
+                          scale: [0, 1, 0],
+                          x: Math.cos((i * 45 * Math.PI) / 180) * 80,
+                          y: Math.sin((i * 45 * Math.PI) / 180) * 80,
+                          opacity: [0, 1, 0],
+                        }}
+                        transition={{
+                          delay: 0.6 + i * 0.05,
+                          duration: 0.8,
+                        }}
+                      >
+                        <Sparkles className="w-3 h-3 text-primary" />
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Success Message */}
+                  <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.7 }}
+                    className="text-center mb-8"
                   >
-                    We'll see you at <span className="text-primary font-heading">{selectedTime}</span>
-                    <br />
-                    A confirmation has been sent to your phone.
-                  </motion.p>
+                    <h3 className="font-heading text-4xl md:text-5xl text-foreground mb-3">
+                      <motion.span
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.8 }}
+                      >
+                        Booking Confirmed!
+                      </motion.span>
+                    </h3>
+                    <motion.p 
+                      className="text-muted-foreground font-body text-lg"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.9 }}
+                    >
+                      Get ready for your transformation
+                    </motion.p>
+                  </motion.div>
 
-                  <motion.button
-                    onClick={() => {
-                      setIsSubmitted(false);
-                      setSelectedTime(null);
-                      setFormData({ name: "", phone: "" });
-                    }}
+                  {/* Booking Details Cards */}
+                  <motion.div
+                    className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1 }}
+                  >
+                    {/* Name Card */}
+                    <motion.div
+                      className="bg-background/50 backdrop-blur-sm border border-primary/20 p-6 rounded-lg relative overflow-hidden group"
+                      whileHover={{ scale: 1.02, borderColor: 'hsl(var(--primary))' }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+                      />
+                      <User className="w-5 h-5 text-primary mb-2" />
+                      <p className="text-xs uppercase letter-spacing-wide text-muted-foreground mb-1">Name</p>
+                      <p className="font-body text-lg font-medium text-foreground">{formData.name}</p>
+                    </motion.div>
+
+                    {/* Date Card */}
+                    <motion.div
+                      className="bg-background/50 backdrop-blur-sm border border-primary/20 p-6 rounded-lg relative overflow-hidden group"
+                      whileHover={{ scale: 1.02, borderColor: 'hsl(var(--primary))' }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+                      />
+                      <Clock className="w-5 h-5 text-primary mb-2" />
+                      <p className="text-xs uppercase letter-spacing-wide text-muted-foreground mb-1">Date</p>
+                      <p className="font-body text-lg font-medium text-primary">
+                        {availableDates.find(d => d.value === selectedDate)?.display || selectedDate}
+                      </p>
+                    </motion.div>
+
+                    {/* Time Card */}
+                    <motion.div
+                      className="bg-background/50 backdrop-blur-sm border border-primary/20 p-6 rounded-lg relative overflow-hidden group"
+                      whileHover={{ scale: 1.02, borderColor: 'hsl(var(--primary))' }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+                      />
+                      <Clock className="w-5 h-5 text-primary mb-2" />
+                      <p className="text-xs uppercase letter-spacing-wide text-muted-foreground mb-1">Time</p>
+                      <p className="font-body text-lg font-medium text-primary">{selectedTime}</p>
+                    </motion.div>
+
+                    {/* Phone Card */}
+                    <motion.div
+                      className="bg-background/50 backdrop-blur-sm border border-primary/20 p-6 rounded-lg relative overflow-hidden group"
+                      whileHover={{ scale: 1.02, borderColor: 'hsl(var(--primary))' }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+                      />
+                      <Phone className="w-5 h-5 text-primary mb-2" />
+                      <p className="text-xs uppercase letter-spacing-wide text-muted-foreground mb-1">Contact</p>
+                      <p className="font-body text-lg font-medium text-foreground">{formData.phone}</p>
+                    </motion.div>
+                  </motion.div>
+
+                  {/* Confirmation Message */}
+                  <motion.div
+                    className="bg-primary/10 border border-primary/30 rounded-lg p-6 mb-8"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1.2 }}
+                  >
+                    <div className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="text-foreground font-body mb-1">
+                          A confirmation SMS has been sent to <span className="text-primary font-semibold">{formData.phone}</span>
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Please arrive 5 minutes early. We can't wait to see you!
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Action Buttons */}
+                  <motion.div
+                    className="flex flex-col sm:flex-row gap-4 justify-center"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.9 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="mt-8 text-primary font-body uppercase letter-spacing-wide text-sm relative group"
+                    transition={{ delay: 1.4 }}
                   >
-                    Book Another
-                    <span className="absolute -bottom-1 left-0 w-full h-px bg-primary transform origin-left transition-transform duration-300 group-hover:scale-x-100" />
-                  </motion.button>
+                    <MagneticButton>
+                      <motion.button
+                        onClick={() => {
+                          setIsSubmitted(false);
+                          setSelectedTime(null);
+                          setSelectedDate("");
+                          setFormData({ name: "", phone: "" });
+                        }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="px-8 py-3 bg-primary text-primary-foreground font-body uppercase letter-spacing-wide text-sm hover:shadow-[0_0_30px_rgba(201,162,77,0.4)] transition-all duration-300"
+                      >
+                        Book Another
+                      </motion.button>
+                    </MagneticButton>
+
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-8 py-3 border border-primary text-primary font-body uppercase letter-spacing-wide text-sm hover:bg-primary/10 transition-all duration-300"
+                    >
+                      View Services
+                    </motion.button>
+                  </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>

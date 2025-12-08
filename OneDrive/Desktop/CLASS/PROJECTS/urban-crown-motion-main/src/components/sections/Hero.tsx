@@ -46,7 +46,7 @@ export const Hero = () => {
   return (
     <section
       ref={containerRef}
-      className="relative h-screen overflow-hidden"
+      className="relative h-[100dvh] overflow-hidden"
     >
       {/* Parallax Background with mouse movement */}
       <motion.div
@@ -104,7 +104,7 @@ export const Hero = () => {
         </motion.div>
 
         {/* Main Headline with stagger */}
-        <h1 className="font-heading text-4xl md:text-6xl lg:text-8xl text-center mb-8">
+        <h1 className="font-heading text-3xl md:text-6xl lg:text-8xl text-center mb-8">
           <AnimatedLetters
             text="Redefining"
             className="block text-foreground"
@@ -122,7 +122,7 @@ export const Hero = () => {
           initial={{ opacity: 0, filter: "blur(10px)" }}
           animate={{ opacity: 1, filter: "blur(0px)" }}
           transition={{ delay: 2, duration: 1 }}
-          className="text-muted-foreground font-body text-base md:text-lg max-w-md text-center mb-12"
+          className="text-muted-foreground font-body text-sm md:text-lg max-w-md text-center mb-12"
         >
           Global Trends. Indian Roots.
         </motion.p>
@@ -134,7 +134,7 @@ export const Hero = () => {
           transition={{ delay: 2.5, duration: 0.8 }}
         >
           <MagneticButton
-            className="bg-primary text-primary-foreground px-10 py-4 font-body uppercase letter-spacing-wide text-sm border border-primary hover:bg-transparent hover:text-primary transition-all duration-500 hover:shadow-[0_0_30px_rgba(201,162,77,0.4)]"
+            className="bg-primary text-primary-foreground px-6 py-3 md:px-10 md:py-4 font-body uppercase letter-spacing-wide text-xs md:text-sm border border-primary hover:bg-transparent hover:text-primary transition-all duration-500 hover:shadow-[0_0_30px_rgba(201,162,77,0.4)]"
             onClick={() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })}
           >
             Book Your Style
