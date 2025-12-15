@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/Navbar";
@@ -9,6 +9,11 @@ import SmoothScroll from "@/components/ui/SmoothScroll";
 
 const inter = Inter({
   variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
 });
 
@@ -24,6 +29,9 @@ export const metadata: Metadata = {
     lastName: "Kumar S",
     username: "DINESHREX",
     gender: "male",
+  },
+  verification: {
+    google: "FdT7h8Hqty51oOrdlQ1IgqRg2mwrX5EO5AaJJc285gY",
   },
 };
 
@@ -56,6 +64,7 @@ export default function RootLayout({
       <body
         className={cn(
           inter.variable,
+          outfit.variable,
           "antialiased bg-background text-foreground min-h-screen selection:bg-accent selection:text-accent-foreground flex flex-col"
         )}
       >
